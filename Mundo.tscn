@@ -1,0 +1,61 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Mundo.gd" type="Script" id=2]
+[ext_resource path="res://Enemi.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Interfaz.tscn" type="PackedScene" id=4]
+[ext_resource path="res://patron-espacio-transparente-color_102902-2360.jpg" type="Texture" id=5]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 4, -6, 0, 0, 0, 0, 636, -2, 0, 0, 0, 0, 636, 410, 0, 0, 0, 0, 8, 404, 0, 0, 0, 0, 4, -6 )
+}
+
+[node name="Mundo" type="Node"]
+script = ExtResource( 2 )
+Enemi = ExtResource( 3 )
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+margin_right = 638.0
+margin_bottom = 410.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Patron-espacio-transparente-color102902-2360" type="Sprite" parent="MarginContainer"]
+position = Vector2( 292, 206.25 )
+scale = Vector2( 1.11502, 0.928572 )
+texture = ExtResource( 5 )
+
+[node name="Player" parent="." instance=ExtResource( 1 )]
+position = Vector2( 238, 155 )
+velocidad = 300
+
+[node name="Enemi_timer" type="Timer" parent="."]
+wait_time = 0.7
+
+[node name="Score_timer" type="Timer" parent="."]
+
+[node name="Inicio_timer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="PosicionDeInicion" type="Position2D" parent="."]
+position = Vector2( 320, 206 )
+
+[node name="Camino" type="Path2D" parent="."]
+position = Vector2( -10.0633, -0.144231 )
+scale = Vector2( 1.01582, 0.975962 )
+curve = SubResource( 1 )
+
+[node name="NaveSigue" type="PathFollow2D" parent="Camino"]
+position = Vector2( 4, -6 )
+rotation = 0.00632894
+
+[node name="Interfaz" parent="." instance=ExtResource( 4 )]
+
+[connection signal="golpe" from="Player" to="." method="game_over"]
+[connection signal="timeout" from="Enemi_timer" to="." method="_on_Enemi_timer_timeout"]
+[connection signal="timeout" from="Score_timer" to="." method="_on_Score_timer_timeout"]
+[connection signal="timeout" from="Inicio_timer" to="." method="_on_Inicio_timer_timeout"]
+[connection signal="iniciar_juego" from="Interfaz" to="." method="nuevo_juego"]
